@@ -26,8 +26,8 @@ script after the reboot.
 4. Modify other configuration files as desired (by say, copying your version of each from your old
    laptop).
 
-5. Set the new laptop PowerShell Execution Policy from Restricted to RemoteSigned (as an
-   administrator).
+5. Set the new laptop PowerShell Execution Policy from Restricted to Unrestricted (as an
+   administrator). (You can set it back after.)
 
 6. Run KickOffBuild.ps1.
 
@@ -45,6 +45,7 @@ C:\ProgramData\chocolatey\logs\chocolatey.log
 ~\AppData\Local\Boxstarter\boxstarter.log 
 
 **Known Bugs**
+
 1. For some reason, Boxstarter's log messages are duplicated. This has been observed by others. I
 have not found a solution.
 2. If run a second time, the build will, in general succeed and stuff that has already been

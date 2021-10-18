@@ -1,4 +1,4 @@
-# development-machine-builder/zip/master
+# development-machine-builder
 
 This repo contains the components needed to set up a new Windows 10 laptop as [recommended by Seal
 Pod](https://levelup.atlassian.net/wiki/spaces/POS/pages/299532297/Chapter+6+Tools) (for Seal Pod

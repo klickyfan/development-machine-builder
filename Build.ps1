@@ -96,16 +96,9 @@ function SetEnvironmentVariables {
 
 function ConfigurePowerShell {
     
-    Write-BoxstarterMessage "testing again, why won't boxstarter see these changes"
-    
-    Write-BoxstarterMessage $BuildComponentsPath 
-    Write-BoxstarterMessage ($BuildComponentsPath  + "\configuration\PowerShell\Microsoft.PowerShell_profile.ps1")
-
     Copy-Item -Path ($BuildComponentsPath  + "\configuration\PowerShell\Microsoft.PowerShell_profile.ps1") -Destination "$env:userprofile\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1"
     
-    Write-BoxstarterMessage "got here, invoking expression"
-    
-    Invoke-Expression "$env:userprofile\Documents\WindowsPowerShell\Microsoft.PowerShell_profiles.ps1"
+    Invoke-Expression "$env:userprofile\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1"
     
     Write-BoxstarterMessage "Powershell configured!"
 }

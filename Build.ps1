@@ -44,13 +44,13 @@ function InstallChocolateyPackages {
         $parameters = ""
         if ($($package.parameters))
         {
-            $parameters = " -params \'" + "$($package.parameters)" + "\'"
+            $parameters = " -params '" + "$($package.parameters)" + "'"
         }
         
         $packageParameters = ""
         if ($($package.package_parameters))
         {
-            $packageParameters = " -params \'" + "$($package.package_parameters)"  + "\'"
+            $packageParameters = " -params '" + "$($package.package_parameters)"  + "'"
         }
         
         Write-BoxstarterMessage "choco install $($package.name) $($parameters) $($packageParameters)"   
@@ -222,13 +222,6 @@ function AddThisPCDesktopIcon {
     } 
 }
 
-function GetWindowsUpdates {
-    
-    Install-Module -Name PSWindowsUpdate -Force
-    Write-BoxstarterMessage "Installing updates... (Computer will reboot in minutes...)"
-    Get-WindowsUpdate -AcceptAll -Install -ForceInstall -AutoReboot
-}
-
 $ErrorActionPreference = "Stop"
 
 Import-Module (Join-Path $Boxstarter.BaseDir Boxstarter.Bootstrapper\Get-PendingReboot.ps1) -global -DisableNameChecking
@@ -310,6 +303,3 @@ RemoveCrap
 
 Write-BoxstarterMessage "Adding 'This PC' Desktop Icon..."
 AddThisPCDesktopIcon
-
-Write-BoxstarterMessage "Get Windows Updates..."
-GetWindowsUpdates

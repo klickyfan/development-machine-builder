@@ -10,8 +10,8 @@ while the work is progressing.
 **Boxstarter**
 
 (Boxstarter)[www.boxstarter.org] is an open source tool detects whether a reboot is required during
-the execution of a PowerShell Script, forces the reboot, and then resumes the script after the
-reboot.
+the execution of a PowerShell Script, forces the reboot, and then relogs you in and resumes the 
+script after the reboot.
 
 **Usage Instructions**
 
@@ -32,19 +32,24 @@ reboot.
 
 7. Stick around to do occasional babysitting. More on this below.
 
-**Babysitting Required**
+**Babysitting Not Required... Much**
 
-Ideally the build process could be run without having to be attended. But... thanks to our IT 
-department's very restrictive policies...
+For the most part the build will run independently, though you will be asked for the credentials your
+use to log in to the laptop soon after it starts.
 
 **Logs That May Be Useful**
 
 C:\ProgramData\chocolatey\logs\chocolatey.log
 ~\AppData\Local\Boxstarter\boxstarter.log 
 
+**Known Bugs**
+1. For some reason, Boxstarter's log messages are duplicated. This has been observed by others. I have
+not found a solution.
+2. 
+
 **Additional Work To Do**
 
-There are some things the Build.ps1 script does not do that you may want to do yourself:
+There are some things the Build.ps1 script does not do that you may want to do yourself, including:
 
 * update Microsoft Edge
 * sign in to your preferred browser(s)

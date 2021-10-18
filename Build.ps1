@@ -101,7 +101,7 @@ function ConfigurePowerShell {
 
     Copy-Item -Path ($BuildComponentsPath  + "\configuration\PowerShell\Microsoft.PowerShell_profile.ps1") -Destination "$env:userprofile\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1"
     
-    Write-BoxstarterMessage "got here"
+    Write-BoxstarterMessage "got here, invoking expression"
     
     Invoke-Expression "$env:userprofile\Documents\WindowsPowerShell\Microsoft.PowerShell_profiles.ps1"
     

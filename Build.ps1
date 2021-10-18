@@ -44,12 +44,18 @@ function InstallChocolateyPackages {
         $parameters = ""
         if ($($package.parameters))
         {
-            $parameters = " -params $($package.parameters)"
+            $parameters = " -params \"$($package.parameters)\""
         }
         
-        Write-BoxstarterMessage "choco install $($package.name) $($parameters)"   
-        choco install $($package.name) $($parameters) --cacheLocation="C:\temp" -y
-        Write-BoxstarterMessage "Installation of $package complete."
+        $packageParameters = ""
+        if ($($package.package_parameters))
+        {
+            $packageParameters = " -params \"$($package.package_parameters)\""
+        }
+        
+        Write-BoxstarterMessage "choco install $($package.name) $($parameters) $($packageParameters)"   
+        choco install $($package.name) $($parameters) $($packageParameters) --cacheLocation="C:\temp" -y
+        Write-BoxstarterMessage "Installation of $($package.name) complete."
         
         refreshenv
     }
@@ -207,12 +213,12 @@ function RemoveCrap {
 
 function AddThisPCDesktopIcon {
 
-    $item = Get-ItemProperty -Path $PCIconRegPath -Name $PCRegValname -ErrorAction SilentlyContinue 
+    $item = Get-ItemProperty -Path $IconRegPath -Name $RegValname -ErrorAction SilentlyContinue 
     if ($item) { 
-        Set-ItemProperty  -Path $PCIconRegPath -name $PCRegValname -Value 0  
+        Set-ItemProperty  -Path $IconRegPath -name $RegValname -Value 0  
     } 
     else { 
-        New-ItemProperty -Path $PCIconRegPath -Name $PCRegValname -Value 0 -PropertyType DWORD | Out-Null  
+        New-ItemProperty -Path $IconRegPath -Name $RegValname -Value 0 -PropertyType DWORD | Out-Null  
     } 
 }
 
@@ -237,7 +243,7 @@ $MarketplaceProtocol = "https:"
 $MarketplaceHostName = "marketplace.visualstudio.com"
 $VisualStudioInstallDir = "C:\Program Files (x86)\Microsoft Visual Studio\Installer\resources\app\ServiceHub\Services\Microsoft.VisualStudio.Setup.Service"
 $IconRegPath = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel"
-$PCRegValname = "{20D04FE0-3AEA-1069-A2D8-08002B30309D}" 
+$RegValname = "{20D04FE0-3AEA-1069-A2D8-08002B30309D}" 
 
 $ErrorActionPreference = "Continue"
 

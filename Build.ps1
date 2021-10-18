@@ -95,8 +95,13 @@ function SetEnvironmentVariables {
 }
 
 function ConfigurePowerShell {
+    
+    Write-BoxstarterMessage $BuildComponentsPath 
+    Write-BoxstarterMessage ($BuildComponentsPath  + "\configuration\PowerShell\Microsoft.PowerShell_profile.ps1")
 
     Copy-Item -Path ($BuildComponentsPath  + "\configuration\PowerShell\Microsoft.PowerShell_profile.ps1") -Destination "~\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1"
+    
+    Write-BoxstarterMessage "got here"
     
     & ~\Documents\WindowsPowerShell\Microsoft.PowerShell_profiles.ps1
     
@@ -236,10 +241,10 @@ Write-BoxstarterMessage "        PART 2 - Install         "
 Write-BoxstarterMessage "---------------------------------"
 
 Write-BoxstarterMessage "Installing packages..."
-InstallPackages
+#InstallPackages
 
 Write-BoxstarterMessage "Installing dotnet ef..."
-InstallDotNetEF
+#InstallDotNetEF
 
 Write-BoxstarterMessage "---------------------------------"
 Write-BoxstarterMessage "        PART 3 - Configure       "

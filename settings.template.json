@@ -4,4 +4,93 @@
   "gitconfig_user_email" : "",
   "gitconfig_github_user" : "",
   "postgres_password" : ""
+  "chocolatey_packages": [
+    {
+      "name": "choco-cleaner"
+    },
+    {
+      "name": "7zip.install"
+    },
+    {
+      "name": "googlechrome"
+    },
+    {
+      "name": "notepadplusplus.install"
+    },
+    {
+      "name": "nuget.commandline"
+    },
+    {
+      "name": "git"
+    },
+    {
+      "name": "github-desktop"
+    },
+    {
+      "name": "sourcetree"
+    },
+    {
+      "name": "gitversion.portable"
+    },
+    {
+      "name": "wixtoolset"
+    },
+    {
+      "name": "pgadmin4"
+    },
+    {
+      "name": "conemu"
+    },
+    {
+      "name": "autohotkey"
+    },
+    {
+      "name": "chocolateygui"
+    },
+    {
+      "name": "freshbing"
+    },
+    {
+      "name": "vscode",
+      "parameters": "/NoDesktopIcon"
+    },
+    {
+      "name": "visualstudio2019professional",
+      "parameters": "--allWorkloads --includeRecommended --passive"
+    }
+  ],
+  "powershell_packages" : [
+    "poshgit",
+    "z"
+  ],
+  "visual_studio_code_extensions" : [
+    "streetsidesoftware.code-spell-checker",
+    "yzhang.markdown-all-in-one",
+    "bierner.markdown-preview-github-styles",
+    "ms-vscode.PowerShell",
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "rvest.vs-code-prettier-eslint",
+    "msjsdiag.vscode-react-native",
+    "rebornix.ruby"
+  ],
+  "visual_studio_extensions": [
+    "dobrynin.cleanbinandobj",
+    "GitHub.GitHubExtensionforVisualStudio",
+    "josefpihrt.Roslynator2019",
+    "MadsKristensen.AddNewFile",
+    "PureDevSoftware.FastFind",
+    "PaulHarrington.EditorGuidelines",
+    "SteveCadwallader.CodeMaid",
+    "WholeTomatoSoftware.VisualAssist",
+  ],
+  "crap_apps" : [
+    "Microsoft.Messaging",
+    "Microsoft.People",
+    "Microsoft.WindowsFeedbackHub",
+    "Microsoft.YourPhone",
+    "Microsoft.ZuneMusic",
+    "Microsoft.ZuneVideo",
+    "Microsoft.GetHelp"
+  ]
 }

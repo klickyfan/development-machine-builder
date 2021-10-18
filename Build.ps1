@@ -26,7 +26,7 @@ function SetContentFromTemplate {
     Set-Content -Path $path -value $content
 }
 
-function InstallPackages {
+function InstallChocolateyPackages {
     
     # make sure chocolatey is installed
     
@@ -36,47 +36,37 @@ function InstallPackages {
     else {
         Write-BoxstarterMessage "Installing Chocolatey for Windows..." 
         Set-ExecutionPolicy Bypass -Scope Process -Force; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
+        Write-BoxstarterMessage "Installation of Chocolatey complete."
     }
     
-    choco install choco-cleaner --cacheLocation="C:\temp"; refreshenv
-    
-    #install chocolatey packages that take no parameters
-    
-    $apps = @(
-        "7zip.install",
-        "googlechrome",
-        "notepadplusplus.install",
-        "nuget.commandline",
-        "git",      
-        "poshgit",
-        "github-desktop",
-        "sourcetree",
-        "gitversion.portable",
-        "wixtoolset",
-        "pgadmin4",
-        "conemu",
-        "autohotkey",
-        "chocolateygui",
-        "freshbing")
-
-    foreach ($app in $apps) {
-        choco install $app --cacheLocation="C:\temp" -y
+    foreach ($package in $Config.chocolatey_packages) {
+        
+        Write-BoxstarterMessage "choco install $package.name $package.parameters"       
+        choco install $package.name $package.parameters --cacheLocation="C:\temp" -y
+        Write-BoxstarterMessage "Installation of $package complete."
+        
+        refreshenv
     }
     
     # install additional chocolatey packages
-    
-    choco install vscode --params '/NoDesktopIcon' --cacheLocation="C:\temp" -y
-    
-    choco install visualstudio2019professional -y --package-parameters '--allWorkloads --includeRecommended --passive' --cacheLocation="C:\temp" -y    
-    choco install visualstudio-github --cacheLocation="C:\temp" -y
-
-    choco install postgresql13 --params "/Password:$($Config.postgres_password)" --cacheLocation="C:\temp" -y
-    
-    # refresh the current PowerShell session with all environment settings possibly performed by package installs
+        
+    choco install postgresql13 --params "/Password:$($Config.postgres_password)" --cacheLocation="C:\temp" -y 
     
     refreshenv
 
     Write-BoxstarterMessage "Packages installed!"
+}
+
+function InstallPowerShellPackages {
+    
+    foreach ($package in $Config.powershell_packages) {     
+    
+        Write-BoxstarterMessage "Installing $($package)..."   
+        Install-Module $package -Scope CurrentUser -Force   
+        Write-BoxstarterMessage "Installation of $($package) complete."
+        
+        refreshenv
+    }
 }
 
 function InstallDotNetEF {
@@ -123,31 +113,73 @@ function ConfigureGit {
 function ConfigureVSCode {
     
     [System.Environment]::SetEnvironmentVariable("PATH", "C:\Program Files\Microsoft VS Code\bin;" + $Env:Path, "Machine")
-      
-    code --install-extension streetsidesoftware.code-spell-checker
-    code --install-extension yzhang.markdown-all-in-one
-    code --install-extension bierner.markdown-preview-github-styles
-    code --install-extension ms-vscode.PowerShell
-    code --install-extension dbaeumer.vscode-eslint
-    code --install-extension esbenp.prettier-vscode
-    code --install-extension rvest.vs-code-prettier-eslint
-    code --install-extension msjsdiag.vscode-react-native
-    code --install-extension rebornix.ruby
-
+     
+    foreach ($extension in $Config.visual_studio_extensions) {
+        
+        Write-BoxstarterMessage "code --install-extension $($extension)"      
+        code --install-extension $extension
+        Write-BoxstarterMessage "Installation of $($extension) complete."
+        
+        refreshenv
+    }     
+    
     Copy-Item -Path ($BuildComponentsPath  + "\configuration\VisualStudioCode\settings.json") -Destination "$Env:UserProfile\AppData\Roaming\Code\User\settings.json"
   
     Write-BoxstarterMessage "Visual Studio Code configured!"
+}
+
+function InstallVSExtension {
+
+    Param($extension)
+
+    $uri = "$($MarketplaceProtocol)//$($MarketplaceHostName)/items?itemName=$($extension)"
+    
+    $response = Invoke-WebRequest -Uri $uri -UseBasicParsing -SessionVariable session
+     
+    Write-BoxstarterMessage "Attempting to download $extension from $uri..."
+    
+    $anchor = $response.Links | Where-Object { $_.class -eq 'install-button-container' } |
+    Select-Object -ExpandProperty href
+
+    if (-Not $anchor) {
+        Write-Error "Could not find the download anchor tag."
+        Exit 1
+    }
+    
+    $href = "$($MarketplaceProtocol)//$($MarketplaceHostName)$($anchor)"
+       
+    $vsixLocation = "$($env:Temp)\$([guid]::NewGuid()).vsix"
+    
+    Invoke-WebRequest $href -OutFile $vsixLocation -WebSession $session
+     
+    if (-Not (Test-Path $vsixLocation)) {
+        Write-Error "Could not find the location of the downloaded VSIX file."
+        Exit 1
+    }
+    
+    Start-Process -Filepath "$($VisualStudioInstallDir)\VSIXInstaller" -ArgumentList "/q /a $($vsixLocation)" -Wait
+
+    rm $vsixLocation
 }
 
 function ConfigureVS {
 
     Copy-Item -Path ($BuildComponentsPath  + "\configuration\NuGet\NuGet.Config") -Destination "$Env:UserProfile\AppData\Roaming\NuGet\NuGet.Config"
 
+    foreach ($extension $Config.visual_studio_extensions) {
+        Write-BoxstarterMessage "Installing $($extension)..."
+        InstallVSExtension $extension
+        Write-BoxstarterMessage "Installation of $($extension) complete."
+    }
+    
     Write-BoxstarterMessage "Visual Studio configured!"
 }
 
 function ConfigureFileExplorer {
 
+    # show hidden files 
+    cmd.exe /c "reg add HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced /v Hidden /t REG_DWORD /d 1 /f"
+    
     # show file extensions
     cmd.exe /c "reg add HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced /v HideFileExt /t REG_DWORD /d 0 /f"
 
@@ -158,21 +190,11 @@ function ConfigureFileExplorer {
 }
 
 function RemoveCrap {
-
-    # To list all appx packages:
-    # Get-AppxPackage | Format-Table -Property Name,Version,PackageFullName
-    
-    $apps = @(
-        "Microsoft.Messaging",
-        "Microsoft.People",
-        "Microsoft.WindowsFeedbackHub",
-        "Microsoft.YourPhone",
-        "Microsoft.ZuneMusic",
-        "Microsoft.ZuneVideo",
-        "Microsoft.GetHelp")
-
-    foreach ($app in $apps) {
+ 
+    foreach ($app in $Config.crap_apps) {
+        Write-BoxstarterMessage "Removing $($app))..."
         Get-AppxPackage -Name $app | Remove-AppxPackage
+        Write-BoxstarterMessage "Removal of $($app) complete."
     }
     
     Write-BoxstarterMessage "Crap removed!"
@@ -180,14 +202,12 @@ function RemoveCrap {
 
 function AddThisPCDesktopIcon {
 
-    $thisPCIconRegPath = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel"
-    $thisPCRegValname = "{20D04FE0-3AEA-1069-A2D8-08002B30309D}" 
-    $item = Get-ItemProperty -Path $thisPCIconRegPath -Name $thisPCRegValname -ErrorAction SilentlyContinue 
+    $item = Get-ItemProperty -Path $PCIconRegPath -Name $PCRegValname -ErrorAction SilentlyContinue 
     if ($item) { 
-        Set-ItemProperty  -Path $thisPCIconRegPath -name $thisPCRegValname -Value 0  
+        Set-ItemProperty  -Path $PCIconRegPath -name $PCRegValname -Value 0  
     } 
     else { 
-        New-ItemProperty -Path $thisPCIconRegPath -Name $thisPCRegValname -Value 0 -PropertyType DWORD | Out-Null  
+        New-ItemProperty -Path $PCIconRegPath -Name $PCRegValname -Value 0 -PropertyType DWORD | Out-Null  
     } 
 }
 
@@ -208,11 +228,17 @@ $Boxstarter.AutoLogin = $true
 
 $BuildComponentsPath = [environment]::GetEnvironmentVariable("BUILD_COMPONENTS_PATH", "Machine")
 
+$MarketplaceProtocol = "https:"
+$MarketplaceHostName = "marketplace.visualstudio.com"
+$VisualStudioInstallDir = "C:\Program Files (x86)\Microsoft Visual Studio\Installer\resources\app\ServiceHub\Services\Microsoft.VisualStudio.Setup.Service"
+$IconRegPath = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel"
+$PCRegValname = "{20D04FE0-3AEA-1069-A2D8-08002B30309D}" 
+
 $ErrorActionPreference = "Continue"
 
-Write-BoxstarterMessage "---------------------------------"
-Write-BoxstarterMessage "        PART 1 - Prepare         "
-Write-BoxstarterMessage "---------------------------------"
+Write-BoxstarterMessage "----------------------------------------"
+Write-BoxstarterMessage "            PART 1 - Prepare           "
+Write-BoxstarterMessage "----------------------------------------"
 
 Write-BoxstarterMessage "Setting execution policy..."
 Set-ExecutionPolicy Bypass -Scope Process -Force
@@ -229,19 +255,22 @@ Write-BoxstarterMessage "Disabling Sleep on AC Power..."
 Powercfg /Change monitor-timeout-ac 20
 Powercfg /Change standby-timeout-ac 0
 
-Write-BoxstarterMessage "---------------------------------"
-Write-BoxstarterMessage "        PART 2 - Install         "
-Write-BoxstarterMessage "---------------------------------"
+Write-BoxstarterMessage "----------------------------------------"
+Write-BoxstarterMessage "       PART 2 - Install Packages       "
+Write-BoxstarterMessage "----------------------------------------"
 
-Write-BoxstarterMessage "Installing packages..."
-InstallPackages
+Write-BoxstarterMessage "Installing Chocolatey packages..."
+InstallChocolateyPackages
+
+Write-BoxstarterMessage "Installing PowerShell packages..."
+InstallPowerShellPackages
 
 Write-BoxstarterMessage "Installing dotnet ef..."
 InstallDotNetEF
 
-Write-BoxstarterMessage "---------------------------------"
-Write-BoxstarterMessage "        PART 3 - Configure       "
-Write-BoxstarterMessage "---------------------------------"
+Write-BoxstarterMessage "----------------------------------------"
+Write-BoxstarterMessage "           PART 3 - Configure           "
+Write-BoxstarterMessage "----------------------------------------"
 
 Write-BoxstarterMessage "Setting environment variables..."
 SetEnvironmentVariables
@@ -261,13 +290,15 @@ ConfigureVS
 Write-BoxstarterMessage "Configuring File Explorer..."
 ConfigureFileExplorer
 
-
-Write-BoxstarterMessage "---------------------------------"
-Write-BoxstarterMessage "        PART 4 - Misc.           "
-Write-BoxstarterMessage "---------------------------------"
+Write-BoxstarterMessage "--------------------------------------"
+Write-BoxstarterMessage "            PART 4 - Misc.            "
+Write-BoxstarterMessage "--------------------------------------"
 
 Write-BoxstarterMessage "Removing crap..."
 RemoveCrap
 
 Write-BoxstarterMessage "Adding 'This PC' Desktop Icon..."
 AddThisPCDesktopIcon
+
+Write-BoxstarterMessage "Get Windows Updates..."
+GetWindowsUpdates

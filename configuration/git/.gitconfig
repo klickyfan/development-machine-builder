@@ -1,0 +1,21 @@
+[user]
+name = {{ gitconfig_user_name }}
+email = {{ gitconfig_user_email }}
+
+[github]
+user = {{ cgitconfig_github_user }}
+
+[core]
+editor = 'C:/Program Files/notepad++.exe' -miltiInst -notabbar -nosession -noPlugin
+whitespace = fix,-indent-with-non-tab,trailing-space,cr-at-eol
+autocrlf = true
+
+[web]
+browser = google-chrome
+
+[color]
+ui = true
+
+[alias]
+l = !git log --pretty=format:'%C(red)%h%Creset - %s %C(green)%ar%Creset %C(bold blue)<%an>%Creset' --abbrev-commit
+

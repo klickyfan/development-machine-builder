@@ -130,16 +130,15 @@ function ConfigureVSCode {
 
 function InstallVSExtension {
 
-    Param($extension)
+    param($extension)
 
     $uri = "$($MarketplaceProtocol)//$($MarketplaceHostName)/items?itemName=$($extension)"
     
     $response = Invoke-WebRequest -Uri $uri -UseBasicParsing -SessionVariable session
      
-    Write-BoxstarterMessage "Attempting to download $extension from $uri..."
+    Write-BoxstarterMessage "Attempting to download $($extension) from $($uri)..."
     
-    $anchor = $response.Links | Where-Object { $_.class -eq 'install-button-container' } |
-    Select-Object -ExpandProperty href
+    $anchor = $response.Links | Where-Object { $_.class -eq 'install-button-container' } | Select-Object -ExpandProperty href
 
     if (-Not $anchor) {
         Write-Error "Could not find the download anchor tag."
@@ -166,7 +165,7 @@ function ConfigureVS {
 
     Copy-Item -Path ($BuildComponentsPath  + "\configuration\NuGet\NuGet.Config") -Destination "$Env:UserProfile\AppData\Roaming\NuGet\NuGet.Config"
 
-    foreach ($extension $Config.visual_studio_extensions) {
+    foreach ($extension in $Config.visual_studio_extensions) {
         Write-BoxstarterMessage "Installing $($extension)..."
         InstallVSExtension $extension
         Write-BoxstarterMessage "Installation of $($extension) complete."

@@ -96,33 +96,33 @@ function SetEnvironmentVariables {
 
 function ConfigurePowerShell {
     
-    Copy-Item -Path ($BuildComponentsPath  + "\configuration\PowerShell\Microsoft.PowerShell_profile.ps1") -Destination "$env:userprofile\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1"
+    Copy-Item -Path ($BuildComponentsPath  + "\configuration\PowerShell\Microsoft.PowerShell_profile.ps1") -Destination "$Env:UserProfile\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1"
     
-    Invoke-Expression "$env:userprofile\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1"
+    Invoke-Expression "$Env:UserProfile\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1"
     
     Write-BoxstarterMessage "Powershell configured!"
 }
 
 function ConfigureConEmu {
     
-    Copy-Item -Path ($BuildComponentsPath  + "\configuration\ConEmu\ConEmu.xml") -Destination "$env:userprofile\AppData\Roaming\ConEmu.xml"
+    Copy-Item -Path ($BuildComponentsPath  + "\configuration\ConEmu\ConEmu.xml") -Destination "$Env:UserProfile\AppData\Roaming\ConEmu.xml"
     
     Write-BoxstarterMessage "Powershell configured!"
 }
 
 function ConfigureGit {
     
-    SetContentFromTemplate "$env:userprofile\.gitconfig" ($BuildComponentsPath + "\configuration\git\.gitconfig")
+    SetContentFromTemplate "$Env:UserProfile\.gitconfig" ($BuildComponentsPath + "\configuration\git\.gitconfig")
     
-    [System.IO.Directory]::CreateDirectory("$env:userprofile\Repos\Personal")
-    [System.IO.Directory]::CreateDirectory("$env:userprofile\Repos\TheLevelUp")
+    [System.IO.Directory]::CreateDirectory("$Env:UserProfile\Repos\Personal")
+    [System.IO.Directory]::CreateDirectory("$Env:UserProfile\Repos\TheLevelUp")
     
     Write-BoxstarterMessage "Git configured!"
 }
 
 function ConfigureVSCode {
     
-    [System.Environment]::SetEnvironmentVariable("PATH", "C:\Program Files\Microsoft VS Code\bin;" + $env:Path, "Machine")
+    [System.Environment]::SetEnvironmentVariable("PATH", "C:\Program Files\Microsoft VS Code\bin;" + $Env:Path, "Machine")
       
     code --install-extension streetsidesoftware.code-spell-checker
     code --install-extension yzhang.markdown-all-in-one
@@ -134,14 +134,14 @@ function ConfigureVSCode {
     code --install-extension msjsdiag.vscode-react-native
     code --install-extension rebornix.ruby
 
-    Copy-Item -Path ($BuildComponentsPath  + "\configuration\VisualStudioCode\settings.json") -Destination "$env:userprofile\AppData\Roaming\Code\User\settings.json"
+    Copy-Item -Path ($BuildComponentsPath  + "\configuration\VisualStudioCode\settings.json") -Destination "$Env:UserProfile\AppData\Roaming\Code\User\settings.json"
   
     Write-BoxstarterMessage "Visual Studio Code configured!"
 }
 
 function ConfigureVS {
 
-    Copy-Item -Path ($BuildComponentsPath  + "\configuration\NuGet\NuGet.Config") -Destination "$env:userprofile\AppData\Roaming\NuGet\NuGet.Config"
+    Copy-Item -Path ($BuildComponentsPath  + "\configuration\NuGet\NuGet.Config") -Destination "$Env:UserProfile\AppData\Roaming\NuGet\NuGet.Config"
 
     Write-BoxstarterMessage "Visual Studio configured!"
 }
@@ -234,10 +234,10 @@ Write-BoxstarterMessage "        PART 2 - Install         "
 Write-BoxstarterMessage "---------------------------------"
 
 Write-BoxstarterMessage "Installing packages..."
-#InstallPackages
+InstallPackages
 
 Write-BoxstarterMessage "Installing dotnet ef..."
-#InstallDotNetEF
+InstallDotNetEF
 
 Write-BoxstarterMessage "---------------------------------"
 Write-BoxstarterMessage "        PART 3 - Configure       "

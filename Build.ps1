@@ -103,7 +103,7 @@ function ConfigurePowerShell {
     
     Write-BoxstarterMessage "got here"
     
-    & $env:userprofile\Documents\WindowsPowerShell\Microsoft.PowerShell_profiles.ps1
+    Invoke-Expression "$env:userprofile\Documents\WindowsPowerShell\Microsoft.PowerShell_profiles.ps1"
     
     Write-BoxstarterMessage "Powershell configured!"
 }

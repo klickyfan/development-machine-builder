@@ -18,8 +18,8 @@ reboot.
 1. Determine if the new laptop is in need of Windows Updates, and reboot if so.
 
 2. Download this repo onto your desktop via
-   [this url](https://codeload.github.com/klickyfan/development-machine-builder/zip/ma). (Getting
-   it this way does not require git.)
+   [this url](https://codeload.github.com/klickyfan/development-machine-builder/zip/main) and
+   extract it. (Getting it this way does not require git.)
 
 3. Copy settings.template.json to settings.json and fill in the blanks.
 

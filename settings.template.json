@@ -48,6 +48,9 @@
       "name": "chocolateygui"
     },
     {
+      "name": "teamviewer"
+    },
+    {
       "name": "freshbing"
     },
     {
@@ -82,7 +85,7 @@
     "PureDevSoftware.FastFind",
     "PaulHarrington.EditorGuidelines",
     "SteveCadwallader.CodeMaid",
-    "WholeTomatoSoftware.VisualAssist",
+    "WholeTomatoSoftware.VisualAssist"
   ],
   "crap_apps" : [
     "Microsoft.Messaging",

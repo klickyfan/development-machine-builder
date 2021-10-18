@@ -41,8 +41,14 @@ function InstallChocolateyPackages {
     
     foreach ($package in $Config.chocolatey_packages) {
         
-        Write-BoxstarterMessage "choco install $package.name $package.parameters"       
-        choco install $package.name $package.parameters --cacheLocation="C:\temp" -y
+        $parameters = ""
+        if ($($package.parameters))
+        {
+            $parameters = " -params $($package.parameters)"
+        }
+        
+        Write-BoxstarterMessage "choco install $($package.name) $($parameters)"   
+        choco install $($package.name) $($parameters) --cacheLocation="C:\temp" -y
         Write-BoxstarterMessage "Installation of $package complete."
         
         refreshenv

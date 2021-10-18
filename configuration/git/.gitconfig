@@ -3,7 +3,7 @@ name = {{ gitconfig_user_name }}
 email = {{ gitconfig_user_email }}
 
 [github]
-user = {{ cgitconfig_github_user }}
+user = {{ gitconfig_github_user }}
 
 [core]
 editor = 'C:/Program Files/notepad++.exe' -miltiInst -notabbar -nosession -noPlugin

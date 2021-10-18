@@ -23,10 +23,11 @@ script after the reboot.
 
 3. Copy settings.template.json to settings.json and fill in the blanks.
 
-4. Modify other configuration files as desired.
+4. Modify other configuration files as desired (by say, copying your version of each from your old
+   laptop).
 
-5. Set the new laptop PowerShell Execution Policy from Restricted to 
-   RemoteSigned (as an administrator).
+5. Set the new laptop PowerShell Execution Policy from Restricted to RemoteSigned (as an
+   administrator).
 
 6. Run KickOffBuild.ps1.
 
@@ -34,8 +35,8 @@ script after the reboot.
 
 **Babysitting Not Required... Much**
 
-For the most part the build will run independently, though you will be asked for the credentials your
-use to log in to the laptop soon after it starts.
+For the most part the build will run independently, though you will be asked for the credentials
+you use to log in to the laptop soon after it starts.
 
 **Logs That May Be Useful**
 
@@ -43,9 +44,17 @@ C:\ProgramData\chocolatey\logs\chocolatey.log
 ~\AppData\Local\Boxstarter\boxstarter.log 
 
 **Known Bugs**
-1. For some reason, Boxstarter's log messages are duplicated. This has been observed by others. I have
-not found a solution.
-2. 
+1. For some reason, Boxstarter's log messages are duplicated. This has been observed by others. I
+have not found a solution.
+2. If run a second time, the build will, in general succeed and stuff that has already been
+install will be ignored or updated. Visual Studio Code extensions are an exception, however. They
+will be reported as "not found" in error messages like this one:
+
+```
+Extension 'wholetomatosoftware.visualassist' not found.
+Make sure you use the full extension ID, including the publisher, e.g.: ms-dotnettools.csharp
+Failed Installing Extensions: wholetomatosoftware.visualassist
+```
 
 **Additional Work To Do**
 

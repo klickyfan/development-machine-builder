@@ -9,7 +9,7 @@ while the work is progressing.
 
 **Boxstarter**
 
-(Boxstarter)[www.boxstarter.org] is an open source tool detects whether a reboot is required during
+[Boxstarter](www.boxstarter.org) is an open source tool detects whether a reboot is required during
 the execution of a PowerShell Script, forces the reboot, and then relogs you in and resumes the 
 script after the reboot.
 

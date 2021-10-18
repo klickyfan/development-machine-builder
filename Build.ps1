@@ -96,6 +96,8 @@ function SetEnvironmentVariables {
 
 function ConfigurePowerShell {
     
+    Write-BoxstarterMessage "testing again, why won't boxstarter see these changes"
+    
     Write-BoxstarterMessage $BuildComponentsPath 
     Write-BoxstarterMessage ($BuildComponentsPath  + "\configuration\PowerShell\Microsoft.PowerShell_profile.ps1")
 

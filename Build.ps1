@@ -94,7 +94,7 @@ function SetEnvironmentVariables {
 
 function ConfigurePowerShell {
 
-    Copy-Item -Path ($BuildComponentsPath  + "\configuration\PowerShell\Microsoft.PowerShell_profile.ps1") ~\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1
+    Copy-Item -Path ($BuildComponentsPath  + "\configuration\PowerShell\Microsoft.PowerShell_profile.ps1") -Destination "~\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1"
     
     & ~\Documents\WindowsPowerShell\Microsoft.PowerShell_profiles.ps1
     
@@ -103,7 +103,7 @@ function ConfigurePowerShell {
 
 function ConfigureConEmu {
     
-    Copy-Item -Path ($BuildComponentsPath  + "\configuration\ConEmu\ConEmu.xml") ~\AppData\Roaming\ConEmu.xml
+    Copy-Item -Path ($BuildComponentsPath  + "\configuration\ConEmu\ConEmu.xml") -Destination "~\AppData\Roaming\ConEmu.xml"
     
     & ~\Documents\WindowsPowerShell\Microsoft.PowerShell_profiles.ps1
     
@@ -112,7 +112,7 @@ function ConfigureConEmu {
 
 function ConfigureGit {
     
-    SetContentFromTemplate ~\.gitconfig ($BuildComponentsPath + "\configuration\git\.gitconfig")
+    SetContentFromTemplate "~\.gitconfig" ($BuildComponentsPath + "\configuration\git\.gitconfig")
     
     [System.IO.Directory]::CreateDirectory("~\Repos\Personal")
     [System.IO.Directory]::CreateDirectory("~\Repos\TheLevelUp")
@@ -120,7 +120,7 @@ function ConfigureGit {
     Write-BoxstarterMessage "Git configured!"
 }
 
-function Set-VSCode {
+function ConfigureVSCode {
     
     [System.Environment]::SetEnvironmentVariable("PATH", "C:\Program Files\Microsoft VS Code\bin;" + $Env:Path, "Machine")
       
@@ -134,14 +134,14 @@ function Set-VSCode {
     code --install-extension msjsdiag.vscode-react-native
     code --install-extension rebornix.ruby
 
-    Copy-Item -Path ($BuildComponentsPath  + "\configuration\VisualStudioCode\settings.json") -Destination ~\AppData\Roaming\Code\User\settings.json
+    Copy-Item -Path ($BuildComponentsPath  + "\configuration\VisualStudioCode\settings.json") -Destination "~\AppData\Roaming\Code\User\settings.json"
   
     Write-BoxstarterMessage "Visual Studio Code configured!"
 }
 
 function ConfigureVS {
 
-    Copy-Item -Path ($BuildComponentsPath  + "\configuration\NuGet\NuGet.Config") -Destination ~\AppData\Roaming\NuGet\NuGet.Config
+    Copy-Item -Path ($BuildComponentsPath  + "\configuration\NuGet\NuGet.Config") -Destination "~\AppData\Roaming\NuGet\NuGet.Config"
 
     Write-BoxstarterMessage "Visual Studio configured!"
 }
@@ -228,9 +228,6 @@ SetTimeZone
 Write-BoxstarterMessage "Disabling Sleep on AC Power..."
 Powercfg /Change monitor-timeout-ac 20
 Powercfg /Change standby-timeout-ac 0
-
-Write-BoxstarterMessage "Checking for Windows updates..."
-CheckForWindowsUpdates
 
 Write-BoxstarterMessage "---------------------------------"
 Write-BoxstarterMessage "        PART 2 - Install         "

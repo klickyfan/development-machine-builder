@@ -8,7 +8,7 @@ Get-Boxstarter -Force
 
 Write-Host "Storing path to settings file..."
 $dir = Split-Path $MyInvocation.MyCommand.Path
-[Environment]::SetEnvironmentVariable("BoxstarterBuildSettingsFile", "$dir\settings.json", "Machine") 
+[Environment]::SetEnvironmentVariable("BUILD_COMPONENTS_PATH", "$dir", "Machine") 
 Write-Host "Path to settings file stored."
 
 Write-Host "Installing Boxstarter"

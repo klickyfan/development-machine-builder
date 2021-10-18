@@ -38,6 +38,8 @@ function InstallPackages {
         Set-ExecutionPolicy Bypass -Scope Process -Force; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
     }
     
+    choco install choco-cleaner --cacheLocation="C:\temp"; refreshenv
+    
     #install chocolatey packages that take no parameters
     
     $apps = @(
@@ -58,17 +60,17 @@ function InstallPackages {
         "freshbing")
 
     foreach ($app in $apps) {
-        choco install $app -y
+        choco install $app --cacheLocation="C:\temp" -y
     }
     
     # install additional chocolatey packages
     
-    choco install vscode --params '/NoDesktopIcon' -y
+    choco install vscode --params '/NoDesktopIcon' --cacheLocation="C:\temp" -y
     
-    choco install visualstudio2019professional -y --package-parameters '--allWorkloads --includeRecommended --passive'      
-    choco install visualstudio-github
+    choco install visualstudio2019professional -y --package-parameters '--allWorkloads --includeRecommended --passive' --cacheLocation="C:\temp" -y    
+    choco install visualstudio-github --cacheLocation="C:\temp" -y
 
-    choco install postgresql13 --params "/Password:$($Config.postgres_password)"
+    choco install postgresql13 --params "/Password:$($Config.postgres_password)" --cacheLocation="C:\temp" -y
     
     # refresh the current PowerShell session with all environment settings possibly performed by package installs
     

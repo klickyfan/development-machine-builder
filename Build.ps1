@@ -44,13 +44,13 @@ function InstallChocolateyPackages {
         $parameters = ""
         if ($($package.parameters))
         {
-            $parameters = " -params \"$($package.parameters)\""
+            $parameters = " -params \'" + "$($package.parameters)" + "\'"
         }
         
         $packageParameters = ""
         if ($($package.package_parameters))
         {
-            $packageParameters = " -params \"$($package.package_parameters)\""
+            $packageParameters = " -params \'" + "$($package.package_parameters)"  + "\'"
         }
         
         Write-BoxstarterMessage "choco install $($package.name) $($parameters) $($packageParameters)"   

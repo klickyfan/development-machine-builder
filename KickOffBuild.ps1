@@ -16,8 +16,8 @@ Write-Host "Installing Boxstarter"
 Write-Host "Boxstarter installed."
 
 Write-Host "Kicking off build!"
-$cred=Get-Credential domain\username
-Install-BoxstarterPackage -PackageName https://raw.githubusercontent.com/klickyfan/development-machine-builder/main/Build.ps1 -Credential $cred
+$credential = Get-Credential
+Install-BoxstarterPackage -PackageName https://raw.githubusercontent.com/klickyfan/development-machine-builder/main/Build.ps1 -Credential $credential
 
 Read-Host
 

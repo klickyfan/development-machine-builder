@@ -1,3 +1,6 @@
+# This script sets up a Windows 10 laptop as recommended by Seal Pod (for Seal Pod 
+# project development). See <link to repo tbd> for more information.
+
 function SetTimeZone {   
 
     Set-TimeZone -Name "Eastern Standard Time"
@@ -91,7 +94,7 @@ function SetEnvironmentVariables {
 
 function ConfigurePowerShell {
 
-    Copy-Item ./PowerShell/Microsoft.PowerShell_profile.ps1 ~\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1
+    Copy-Item -Path ($BuildComponentsPath  + "\configuration\PowerShell\Microsoft.PowerShell_profile.ps1") ~\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1
     
     & ~\Documents\WindowsPowerShell\Microsoft.PowerShell_profiles.ps1
     
@@ -99,14 +102,20 @@ function ConfigurePowerShell {
 }
 
 function ConfigureConEmu {
+    
+    Copy-Item -Path ($BuildComponentsPath  + "\configuration\ConEmu\ConEmu.xml") ~\AppData\Roaming\ConEmu.xml
+    
+    & ~\Documents\WindowsPowerShell\Microsoft.PowerShell_profiles.ps1
+    
+    Write-BoxstarterMessage "Powershell configured!"
 }
 
 function ConfigureGit {
     
-    SetContentFromTemplate ~/.gitconfig ./git/.gitconfig
+    SetContentFromTemplate ~\.gitconfig ($BuildComponentsPath + "\configuration\git\.gitconfig")
     
-    [System.IO.Directory]::CreateDirectory(~\Repos\Personal)
-    [System.IO.Directory]::CreateDirectory(~\Repos\TheLevelUp)
+    [System.IO.Directory]::CreateDirectory("~\Repos\Personal")
+    [System.IO.Directory]::CreateDirectory("~\Repos\TheLevelUp")
     
     Write-BoxstarterMessage "Git configured!"
 }
@@ -125,14 +134,14 @@ function Set-VSCode {
     code --install-extension msjsdiag.vscode-react-native
     code --install-extension rebornix.ruby
 
-    Copy-Item ./VisualStudioCode/settings.json ~\AppData\Roaming\Code\User\settings.json
+    Copy-Item -Path ($BuildComponentsPath  + "\configuration\VisualStudioCode\settings.json") -Destination ~\AppData\Roaming\Code\User\settings.json
   
     Write-BoxstarterMessage "Visual Studio Code configured!"
 }
 
 function ConfigureVS {
 
-    Copy-Item ./NuGet/NuGet.Config ~\AppData\Roaming\NuGet\NuGet.Config
+    Copy-Item -Path ($BuildComponentsPath  + "\configuration\NuGet\NuGet.Config") -Destination ~\AppData\Roaming\NuGet\NuGet.Config
 
     Write-BoxstarterMessage "Visual Studio configured!"
 }
@@ -197,6 +206,8 @@ $Boxstarter.RebootOk = $true
 $Boxstarter.NoPassword = $false
 $Boxstarter.AutoLogin = $true
 
+$BuildComponentsPath = [environment]::GetEnvironmentVariable("BUILD_COMPONENTS_PATH", "Machine")
+
 $ErrorActionPreference = "Continue"
 
 Write-BoxstarterMessage "---------------------------------"
@@ -207,8 +218,9 @@ Write-BoxstarterMessage "Setting execution policy..."
 Set-ExecutionPolicy Bypass -Scope Process -Force
 
 Write-BoxstarterMessage "Reading settings.json..."
+
 $Config = @{}
-(Get-Content -Path ([environment]::GetEnvironmentVariable("BoxstarterBuildSettingsFile", "Machine")) -Raw | ConvertFrom-Json).psobject.properties | Foreach { $Config[$_.Name] = $_.Value }
+(Get-Content -Path ($BuildComponentsPath  + "\settings.json") -Raw | ConvertFrom-Json).psobject.properties | Foreach { $Config[$_.Name] = $_.Value }
 
 Write-BoxstarterMessage "Setting time zone..."
 SetTimeZone
@@ -262,5 +274,3 @@ RemoveCrap
 
 Write-BoxstarterMessage "Adding 'This PC' Desktop Icon..."
 AddThisPCDesktopIcon
-
-

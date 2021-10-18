@@ -3,21 +3,18 @@ if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
     exit 
 }
 
-
 [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://boxstarter.org/bootstrapper.ps1'))
 Get-Boxstarter -Force
 
-Write-Host "Storing config path"
+Write-Host "Storing path to settings file..."
 $dir = Split-Path $MyInvocation.MyCommand.Path
 [Environment]::SetEnvironmentVariable("BoxstarterBuildSettingsFile", "$dir\settings.json", "Machine") 
-Write-Host "Config path stored"
+Write-Host "Path to settings file stored."
 
-Write-Host "Installing boxstarter"
+Write-Host "Installing Boxstarter"
 . { Invoke-WebRequest -useb http://boxstarter.org/bootstrapper.ps1 } | Invoke-Expression; get-boxstarter -Force
-Write-Host "Boxstarter successfully installed"
+Write-Host "Boxstarter installed."
 
-Write-Host "Running InstallBox"
+Write-Host "Kicking off build!"
 Install-BoxstarterPackage -PackageName https://gist.githubusercontent.com/klickyfan/507cf20a73640174869efc00589ac2f1/raw/BoxStarterBuild.ps1
-Write-Host "InstallBox script finished"
 
-Read-Host

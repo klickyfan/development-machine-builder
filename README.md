@@ -19,14 +19,16 @@ which may require a reboot
 
 3. Copy settings.template.json to settings.json and fill in the blanks.
 
-3. Set the new laptop's PowerShell Execution Policy from Restricted to 
+4. Modify configuration files as desired.
+
+5. Set the new laptop's PowerShell Execution Policy from Restricted to 
    RemoteSigned (as an administrator).
 
-4. Run KickOffBuild.ps1.
+6. Run KickOffBuild.ps1.
 
-5. Stick around to do occasional babysitting. More on this below.
+7. Stick around to do occasional babysitting. More on this below.
 
-6. Run InstallVSExtensions.ps1.
+8. Run InstallVSExtensions.ps1.
 
 **Babysitting Required
 

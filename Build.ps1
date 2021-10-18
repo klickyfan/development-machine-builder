@@ -1,5 +1,6 @@
 # This script sets up a Windows 10 laptop as recommended by Seal Pod (for Seal Pod 
-# project development). See <link to repo tbd> for more information.
+# project development). See https://github.com/klickyfan/development-machine-builder 
+# for more information.
 
 function SetTimeZone {   
 

@@ -3,7 +3,8 @@ if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
     exit
 }
 
-[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://boxstarter.org/bootstrapper.ps1'))
+[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
+iex ((New-Object System.Net.WebClient).DownloadString('https://boxstarter.org/bootstrapper.ps1'))
 Get-Boxstarter -Force
 
 Write-Host "Storing path to settings file..."
@@ -20,6 +21,6 @@ $credential = Get-Credential
 Install-BoxstarterPackage -PackageName https://raw.githubusercontent.com/klickyfan/development-machine-builder/main/Build.ps1 -Credential $credential
 
 # This line will never be reached if a reboot is required during the build, but it can be useful
-(in preventing the PowerShell window from going away) if the build fails.
+# (in preventing the PowerShell window from going away) if the build fails.
 Read-Host
 

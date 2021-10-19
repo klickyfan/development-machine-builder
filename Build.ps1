@@ -54,16 +54,16 @@ function InstallChocolateyPackages {
             $packageParameters = " -params '" + "$($package.package_parameters)"  + "'"
         }
 
-        Write-BoxstarterMessage "choco install $($package.name) $($parameters) $($packageParameters)"
+        Write-BoxstarterMessage "Installing $($package.name)..."
         choco install $($package.name) $($parameters) $($packageParameters) --cacheLocation="C:\temp" -y
         Write-BoxstarterMessage "Installation of $($package.name) complete."
 
         refreshenv
     }
 
-    # install additional chocolatey packages
-
+    Write-BoxstarterMessage "Installing postgresql13..."
     choco install postgresql13 --params "/Password:$($Config.postgres_password)" --cacheLocation="C:\temp" -y
+    Write-BoxstarterMessage "Installation of postgresql13 complete."
 
     refreshenv
 
@@ -74,9 +74,15 @@ function InstallPowerShellPackages {
 
     foreach ($package in $Config.powershell_packages) {
 
-        Write-BoxstarterMessage "Installing $($package)..."
-        Install-Module $package -Scope CurrentUser -Force
-        Write-BoxstarterMessage "Installation of $($package) complete."
+        $parameters = ""
+        if ($($package.parameters))
+        {
+            $parameters = " -params '" + "$($package.parameters)" + "'"
+        }
+
+        Write-BoxstarterMessage "Installing $($package.name)..."
+        Install-Module $package $parameters -Scope CurrentUser -Force
+        Write-BoxstarterMessage "Installation of $($package.name) complete."
 
         refreshenv
     }
@@ -129,7 +135,7 @@ function ConfigureVSCode {
 
     foreach ($extension in $Config.visual_studio_extensions) {
 
-        Write-BoxstarterMessage "code --install-extension $($extension)"
+        Write-BoxstarterMessage "Installing $($extension)..."
         code --install-extension $extension
         Write-BoxstarterMessage "Installation of $($extension) complete."
 
@@ -153,21 +159,11 @@ function InstallVSExtension {
 
     $anchor = $response.Links | Where-Object { $_.class -eq 'install-button-container' } | Select-Object -ExpandProperty href
 
-    if (-Not $anchor) {
-        Write-Error "Could not find the download anchor tag."
-        Exit 1
-    }
-
     $href = "$($MarketplaceProtocol)//$($MarketplaceHostName)$($anchor)"
 
     $vsixLocation = "$($env:Temp)\$([guid]::NewGuid()).vsix"
 
     Invoke-WebRequest $href -OutFile $vsixLocation -WebSession $session
-
-    if (-Not (Test-Path $vsixLocation)) {
-        Write-Error "Could not find the location of the downloaded VSIX file."
-        Exit 1
-    }
 
     Start-Process -Filepath "$($VisualStudioInstallDir)\VSIXInstaller" -ArgumentList "/q /a $($vsixLocation)" -Wait
 

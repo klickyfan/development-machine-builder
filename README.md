@@ -25,11 +25,11 @@ script after the reboot.
 4. Modify other configuration files as desired, either manually or by copying the ones on yout
    old laptop from these locations:
    
-   ConEmu.xml: %appdata%
-   .gitconfig: ~\.gitconfig
-   .Nuget.Config %appdata%\NuGet
-   Microsoft.PowerShell_profile.ps1: ~\Documents\WindowsPowerShell
-   Visual Studio Code settings.json: %appdata\Code\User
+   ConEmu.xml: %appdata%<br>
+   .gitconfig: ~\.gitconfig<br>
+   .Nuget.Config %appdata%\NuGet<br>
+   Microsoft.PowerShell_profile.ps1: ~\Documents\WindowsPowerShell<br>
+   Visual Studio Code settings.json: %appdata\Code\User<br>
  
 5. Set the new laptopPowerShell Execution Policy from Restricted to Unrestricted (as an
    administrator). (You can set it back after.)

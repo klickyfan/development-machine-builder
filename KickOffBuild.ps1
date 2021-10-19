@@ -23,4 +23,3 @@ Install-BoxstarterPackage -PackageName https://raw.githubusercontent.com/klickyf
 # This line will never be reached if a reboot is required during the build, but it can be useful
 # (in preventing the PowerShell window from going away) if the build fails.
 Read-Host
-

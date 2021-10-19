@@ -51,10 +51,11 @@ function InstallChocolateyPackages {
         $packageParameters = ""
         if ($($package.package_parameters))
         {
-            $packageParameters = " -params '" + "$($package.package_parameters)"  + "'"
+            $packageParameters = " --package-parameters '" + "$($package.package_parameters)"  + "'"
         }
 
         Write-BoxstarterMessage "Installing $($package.name)..."
+        Write-BoxstarterMessage "choco install $($package.name) $($parameters) $($packageParameters)..."
         choco install $($package.name) $($parameters) $($packageParameters) --cacheLocation="C:\temp" -y
         Write-BoxstarterMessage "Installation of $($package.name) complete."
 
@@ -81,7 +82,8 @@ function InstallPowerShellPackages {
         }
 
         Write-BoxstarterMessage "Installing $($package.name)..."
-        Install-Module $package $parameters -Scope CurrentUser -Force
+        Write-BoxstarterMessage "Executing Install-Module $($package.name) $($parameters)..."
+        Install-Module $($package.name) $($parameters) -Scope CurrentUser -Force
         Write-BoxstarterMessage "Installation of $($package.name) complete."
 
         refreshenv

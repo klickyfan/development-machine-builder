@@ -22,7 +22,7 @@ function SetContentFromTemplate {
     foreach ($c in $Config.GetEnumerator()) {
 
         if ($($c.Value) -isnot [array]) {
-            Write-BoxstarterMessage "Replacing {{ $($c.Name) }} with $($c.Value)...blahblah"
+            Write-BoxstarterMessage "Replacing {{ $($c.Name) }} with $($c.Value)..."
             $content = $content.replace("{{ $($c.Name) }}", $($c.Value))
         }
     }

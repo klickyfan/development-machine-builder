@@ -18,13 +18,13 @@ function SetContentFromTemplate {
     param($path, $templatePath)
 
     $content = Get-Content $templatePath
-    
-    Write-BoxstarterMessage $content
 
     foreach ($c in $Config.GetEnumerator()) {
 
-        Write-BoxstarterMessage "Replacing {{ $($c.Name) }} with $($c.Value)..."
-        $content = $content.replace("{{ $($c.Name) }}", $($c.Value))
+        if ($c -isnot [array]) {
+            Write-BoxstarterMessage "Replacing {{ $($c.Name) }} with $($c.Value)..."
+            $content = $content.replace("{{ $($c.Name) }}", $($c.Value))
+        }
     }
 
     Set-Content -Path $path -value $content

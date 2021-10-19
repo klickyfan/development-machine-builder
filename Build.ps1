@@ -1,8 +1,8 @@
-# This script sets up a Windows 10 laptop as recommended by Seal Pod (for Seal Pod 
-# project development). See https://github.com/klickyfan/development-machine-builder 
+# This script sets up a Windows 10 laptop as recommended by Seal Pod (for Seal Pod
+# project development). See https://github.com/klickyfan/development-machine-builder
 # for more information.
 
-function SetTimeZone {   
+function SetTimeZone {
 
     Set-TimeZone -Name "Eastern Standard Time"
 
@@ -35,7 +35,7 @@ function InstallChocolateyPackages {
         Write-BoxstarterMessage "Choco is already installed, skip installation."
     }
     else {
-        Write-BoxstarterMessage "Installing Chocolatey for Windows..." 
+        Write-BoxstarterMessage "Installing Chocolatey for Windows..."
         Set-ExecutionPolicy Bypass -Scope Process -Force; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
         Write-BoxstarterMessage "Installation of Chocolatey complete."
     }
@@ -54,7 +54,7 @@ function InstallChocolateyPackages {
             $packageParameters = " -params '" + "$($package.package_parameters)"  + "'"
         }
 
-        Write-BoxstarterMessage "choco install $($package.name) $($parameters) $($packageParameters)"   
+        Write-BoxstarterMessage "choco install $($package.name) $($parameters) $($packageParameters)"
         choco install $($package.name) $($parameters) $($packageParameters) --cacheLocation="C:\temp" -y
         Write-BoxstarterMessage "Installation of $($package.name) complete."
 
@@ -63,7 +63,7 @@ function InstallChocolateyPackages {
 
     # install additional chocolatey packages
 
-    choco install postgresql13 --params "/Password:$($Config.postgres_password)" --cacheLocation="C:\temp" -y 
+    choco install postgresql13 --params "/Password:$($Config.postgres_password)" --cacheLocation="C:\temp" -y
 
     refreshenv
 
@@ -72,10 +72,10 @@ function InstallChocolateyPackages {
 
 function InstallPowerShellPackages {
 
-    foreach ($package in $Config.powershell_packages) {     
+    foreach ($package in $Config.powershell_packages) {
 
-        Write-BoxstarterMessage "Installing $($package)..."   
-        Install-Module $package -Scope CurrentUser -Force   
+        Write-BoxstarterMessage "Installing $($package)..."
+        Install-Module $package -Scope CurrentUser -Force
         Write-BoxstarterMessage "Installation of $($package) complete."
 
         refreshenv
@@ -128,13 +128,13 @@ function ConfigureVSCode {
     [System.Environment]::SetEnvironmentVariable("PATH", "C:\Program Files\Microsoft VS Code\bin;" + $Env:Path, "Machine")
 
     foreach ($extension in $Config.visual_studio_extensions) {
- 
-        Write-BoxstarterMessage "code --install-extension $($extension)"      
+
+        Write-BoxstarterMessage "code --install-extension $($extension)"
         code --install-extension $extension
         Write-BoxstarterMessage "Installation of $($extension) complete."
 
         refreshenv
-    }     
+    }
 
     Copy-Item -Path ($BuildComponentsPath  + "\configuration\VisualStudioCode\settings.json") -Destination "$Env:UserProfile\AppData\Roaming\Code\User\settings.json"
 
@@ -189,7 +189,7 @@ function ConfigureVS {
 
 function ConfigureFileExplorer {
 
-    # show hidden files 
+    # show hidden files
     cmd.exe /c "reg add HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced /v Hidden /t REG_DWORD /d 1 /f"
 
     # show file extensions
@@ -202,7 +202,7 @@ function ConfigureFileExplorer {
 }
 
 function RemoveCrap {
- 
+
     foreach ($app in $Config.crap_apps) {
         Write-BoxstarterMessage "Removing $($app))..."
         Get-AppxPackage -Name $app | Remove-AppxPackage
@@ -214,13 +214,13 @@ function RemoveCrap {
 
 function AddThisPCDesktopIcon {
 
-    $item = Get-ItemProperty -Path $IconRegPath -Name $RegValname -ErrorAction SilentlyContinue 
-    if ($item) { 
-        Set-ItemProperty  -Path $IconRegPath -name $RegValname -Value 0  
-    } 
-    else { 
-        New-ItemProperty -Path $IconRegPath -Name $RegValname -Value 0 -PropertyType DWORD | Out-Null  
-    } 
+    $item = Get-ItemProperty -Path $IconRegPath -Name $RegValname -ErrorAction SilentlyContinue
+    if ($item) {
+        Set-ItemProperty  -Path $IconRegPath -name $RegValname -Value 0
+    }
+    else {
+        New-ItemProperty -Path $IconRegPath -Name $RegValname -Value 0 -PropertyType DWORD | Out-Null
+    }
 }
 
 $ErrorActionPreference = "Stop"
@@ -237,7 +237,7 @@ $MarketplaceProtocol = "https:"
 $MarketplaceHostName = "marketplace.visualstudio.com"
 $VisualStudioInstallDir = "C:\Program Files (x86)\Microsoft Visual Studio\Installer\resources\app\ServiceHub\Services\Microsoft.VisualStudio.Setup.Service"
 $IconRegPath = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel"
-$RegValname = "{20D04FE0-3AEA-1069-A2D8-08002B30309D}" 
+$RegValname = "{20D04FE0-3AEA-1069-A2D8-08002B30309D}"
 
 $ErrorActionPreference = "Continue"
 
@@ -282,7 +282,7 @@ SetEnvironmentVariables
 
 Write-BoxstarterMessage "Configuring PowerShell..."
 ConfigurePowershell
-    
+
 Write-BoxstarterMessage "Configuring git..."
 ConfigureGit -Parameters $arguments
 

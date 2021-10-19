@@ -45,13 +45,13 @@ function InstallChocolateyPackages {
         $parameters = ""
         if ($($package.parameters))
         {
-            $parameters = " -params \"" + "$($package.parameters)" + "\""
+            $parameters = " -params `"" + "$($package.parameters)" + "`""
         }
 
         $packageParameters = ""
         if ($($package.package_parameters))
         {
-            $packageParameters = " --package-parameters \"" + "$($package.package_parameters)"  + "\""
+            $packageParameters = " --package-parameters `"" + "$($package.package_parameters)"  + "`""
         }
 
         Write-BoxstarterMessage "Installing $($package.name)..."

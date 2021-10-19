@@ -76,7 +76,7 @@ function InstallPowerShellPackages {
     foreach ($package in $Config.powershell_packages) {
 
         Write-BoxstarterMessage "Installing $($package.name)..."
-        Write-BoxstarterMessage "Executing Install-Module $($package.name) $($package.parameters)..."
+        Write-BoxstarterMessage "Executing Install-Module -Name $($package.name) $($package.parameters)..."
         Install-Module -Name $($package.name) $($package.parameters) -Scope CurrentUser -Force
         Write-BoxstarterMessage "Installation of $($package.name) complete."
 

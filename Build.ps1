@@ -14,13 +14,13 @@ function CheckCommand($cmdname) {
 }
 
 function SetContentFromTemplate {
-    
+
     param($path, $templatePath)
 
     $content = Get-Content $templatePath
 
     foreach ($c in $Config.GetEnumerator()) {
-  
+
         $content = $content.replace("{{ $($c.Name) }}", $($c.Value))
     }
 
@@ -41,7 +41,7 @@ function InstallChocolateyPackages {
     }
 
     foreach ($package in $Config.chocolatey_packages) {
-        
+
         $parameters = ""
         if ($($package.parameters))
         {
@@ -57,7 +57,7 @@ function InstallChocolateyPackages {
         Write-BoxstarterMessage "choco install $($package.name) $($parameters) $($packageParameters)"   
         choco install $($package.name) $($parameters) $($packageParameters) --cacheLocation="C:\temp" -y
         Write-BoxstarterMessage "Installation of $($package.name) complete."
-        
+
         refreshenv
     }
 
@@ -77,7 +77,7 @@ function InstallPowerShellPackages {
         Write-BoxstarterMessage "Installing $($package)..."   
         Install-Module $package -Scope CurrentUser -Force   
         Write-BoxstarterMessage "Installation of $($package) complete."
-  
+
         refreshenv
     }
 }

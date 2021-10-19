@@ -5,7 +5,7 @@
 function SetTimeZone {   
 
     Set-TimeZone -Name "Eastern Standard Time"
-    
+
     Write-BoxstarterMessage "Time zone set!"
 }
 
@@ -14,23 +14,23 @@ function CheckCommand($cmdname) {
 }
 
 function SetContentFromTemplate {
-          
+    
     param($path, $templatePath)
-    
+
     $content = Get-Content $templatePath
-    
+
     foreach ($c in $Config.GetEnumerator()) {
-        
+  
         $content = $content.replace("{{ $($c.Name) }}", $($c.Value))
     }
-    
+
     Set-Content -Path $path -value $content
 }
 
 function InstallChocolateyPackages {
-    
+
     # make sure chocolatey is installed
-    
+
     if (CheckCommand -cmdname 'choco') {
         Write-BoxstarterMessage "Choco is already installed, skip installation."
     }
@@ -39,7 +39,7 @@ function InstallChocolateyPackages {
         Set-ExecutionPolicy Bypass -Scope Process -Force; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
         Write-BoxstarterMessage "Installation of Chocolatey complete."
     }
-    
+
     foreach ($package in $Config.chocolatey_packages) {
         
         $parameters = ""
@@ -47,97 +47,97 @@ function InstallChocolateyPackages {
         {
             $parameters = " -params '" + "$($package.parameters)" + "'"
         }
-        
+
         $packageParameters = ""
         if ($($package.package_parameters))
         {
             $packageParameters = " -params '" + "$($package.package_parameters)"  + "'"
         }
-        
+
         Write-BoxstarterMessage "choco install $($package.name) $($parameters) $($packageParameters)"   
         choco install $($package.name) $($parameters) $($packageParameters) --cacheLocation="C:\temp" -y
         Write-BoxstarterMessage "Installation of $($package.name) complete."
         
         refreshenv
     }
-    
+
     # install additional chocolatey packages
-        
+
     choco install postgresql13 --params "/Password:$($Config.postgres_password)" --cacheLocation="C:\temp" -y 
-    
+
     refreshenv
 
     Write-BoxstarterMessage "Packages installed!"
 }
 
 function InstallPowerShellPackages {
-    
+
     foreach ($package in $Config.powershell_packages) {     
-    
+
         Write-BoxstarterMessage "Installing $($package)..."   
         Install-Module $package -Scope CurrentUser -Force   
         Write-BoxstarterMessage "Installation of $($package) complete."
-        
+  
         refreshenv
     }
 }
 
 function InstallDotNetEF {
-    
+
     dotnet tool install --global dotnet-ef
     dotnet tool update --global dotnet-ef
-    
+
     Write-BoxstarterMessage "dotnet ef installed!"
 }
 
 function SetEnvironmentVariables {
-    
+
     [Environment]::SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "Development", "Machine")
 
     Write-BoxstarterMessage "Environment variables set!"
 }
 
 function ConfigurePowerShell {
-    
+
     Copy-Item -Path ($BuildComponentsPath  + "\configuration\PowerShell\Microsoft.PowerShell_profile.ps1") -Destination "$Env:UserProfile\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1"
-    
+
     Invoke-Expression "$Env:UserProfile\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1"
-    
+
     Write-BoxstarterMessage "Powershell configured!"
 }
 
 function ConfigureConEmu {
-    
+
     Copy-Item -Path ($BuildComponentsPath  + "\configuration\ConEmu\ConEmu.xml") -Destination "$Env:UserProfile\AppData\Roaming\ConEmu.xml"
-    
+
     Write-BoxstarterMessage "Powershell configured!"
 }
 
 function ConfigureGit {
-    
+
     SetContentFromTemplate "$Env:UserProfile\.gitconfig" ($BuildComponentsPath + "\configuration\git\.gitconfig")
-    
+
     [System.IO.Directory]::CreateDirectory("$Env:UserProfile\Repos\Personal")
     [System.IO.Directory]::CreateDirectory("$Env:UserProfile\Repos\TheLevelUp")
-    
+
     Write-BoxstarterMessage "Git configured!"
 }
 
 function ConfigureVSCode {
-    
+
     [System.Environment]::SetEnvironmentVariable("PATH", "C:\Program Files\Microsoft VS Code\bin;" + $Env:Path, "Machine")
-     
+
     foreach ($extension in $Config.visual_studio_extensions) {
-        
+ 
         Write-BoxstarterMessage "code --install-extension $($extension)"      
         code --install-extension $extension
         Write-BoxstarterMessage "Installation of $($extension) complete."
-        
+
         refreshenv
     }     
-    
+
     Copy-Item -Path ($BuildComponentsPath  + "\configuration\VisualStudioCode\settings.json") -Destination "$Env:UserProfile\AppData\Roaming\Code\User\settings.json"
-  
+
     Write-BoxstarterMessage "Visual Studio Code configured!"
 }
 
@@ -146,29 +146,29 @@ function InstallVSExtension {
     param($extension)
 
     $uri = "$($MarketplaceProtocol)//$($MarketplaceHostName)/items?itemName=$($extension)"
-    
+
     $response = Invoke-WebRequest -Uri $uri -UseBasicParsing -SessionVariable session
-     
+
     Write-BoxstarterMessage "Attempting to download $($extension) from $($uri)..."
-    
+
     $anchor = $response.Links | Where-Object { $_.class -eq 'install-button-container' } | Select-Object -ExpandProperty href
 
     if (-Not $anchor) {
         Write-Error "Could not find the download anchor tag."
         Exit 1
     }
-    
+
     $href = "$($MarketplaceProtocol)//$($MarketplaceHostName)$($anchor)"
-       
+
     $vsixLocation = "$($env:Temp)\$([guid]::NewGuid()).vsix"
-    
+
     Invoke-WebRequest $href -OutFile $vsixLocation -WebSession $session
-     
+
     if (-Not (Test-Path $vsixLocation)) {
         Write-Error "Could not find the location of the downloaded VSIX file."
         Exit 1
     }
-    
+
     Start-Process -Filepath "$($VisualStudioInstallDir)\VSIXInstaller" -ArgumentList "/q /a $($vsixLocation)" -Wait
 
     rm $vsixLocation
@@ -183,7 +183,7 @@ function ConfigureVS {
         InstallVSExtension $extension
         Write-BoxstarterMessage "Installation of $($extension) complete."
     }
-    
+
     Write-BoxstarterMessage "Visual Studio configured!"
 }
 
@@ -191,7 +191,7 @@ function ConfigureFileExplorer {
 
     # show hidden files 
     cmd.exe /c "reg add HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced /v Hidden /t REG_DWORD /d 1 /f"
-    
+
     # show file extensions
     cmd.exe /c "reg add HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced /v HideFileExt /t REG_DWORD /d 0 /f"
 
@@ -208,7 +208,7 @@ function RemoveCrap {
         Get-AppxPackage -Name $app | Remove-AppxPackage
         Write-BoxstarterMessage "Removal of $($app) complete."
     }
-    
+
     Write-BoxstarterMessage "Crap removed!"
 }
 

@@ -63,13 +63,8 @@
     }
   ],
   "powershell_packages" : [
-    {
-      "name": "posh-git"
-    },
-    {
-      "name": "z",
-      "parameters": "-AllowClobber"
-    }
+    "posh-git",
+    "z"
   ],
   "visual_studio_code_extensions" : [
     "streetsidesoftware.code-spell-checker",

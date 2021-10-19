@@ -47,10 +47,10 @@ function InstallChocolateyPackages {
         if ($($package.parameters) -And $($package.package_parameters)) {
             choco install $($package.name) --params "$($package.parameters)" --package-parameters  "$($package.package_parameters)" --cacheLocation="C:\temp" -y
         }  
-        else if ($($package.parameters)) {
+        elseif ($($package.parameters)) {
             choco install $($package.name) --params "$($package.parameters)" --cacheLocation="C:\temp" -y
         }
-        else if ($($package.package_parameters)) {
+        elseif ($($package.package_parameters)) {
             choco install $($package.name) --package-parameters "$($package.package_parameters)" --cacheLocation="C:\temp" -y
         }
         else {

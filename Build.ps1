@@ -45,17 +45,17 @@ function InstallChocolateyPackages {
         $parameters = ""
         if ($($package.parameters))
         {
-            $parameters = " -params '" + "$($package.parameters)" + "'"
+            $parameters = " -params \"" + "$($package.parameters)" + "\""
         }
 
         $packageParameters = ""
         if ($($package.package_parameters))
         {
-            $packageParameters = " --package-parameters '" + "$($package.package_parameters)"  + "'"
+            $packageParameters = " --package-parameters \"" + "$($package.package_parameters)"  + "\""
         }
 
         Write-BoxstarterMessage "Installing $($package.name)..."
-        Write-BoxstarterMessage "choco install $($package.name) $($parameters) $($packageParameters)..."
+        Write-BoxstarterMessage "Executing choco install $($package.name) $($parameters) $($packageParameters)..."
         choco install $($package.name) $($parameters) $($packageParameters) --cacheLocation="C:\temp" -y
         Write-BoxstarterMessage "Installation of $($package.name) complete."
 
@@ -75,15 +75,9 @@ function InstallPowerShellPackages {
 
     foreach ($package in $Config.powershell_packages) {
 
-        $parameters = ""
-        if ($($package.parameters))
-        {
-            $parameters = " -params '" + "$($package.parameters)" + "'"
-        }
-
         Write-BoxstarterMessage "Installing $($package.name)..."
         Write-BoxstarterMessage "Executing Install-Module $($package.name) $($parameters)..."
-        Install-Module $($package.name) $($parameters) -Scope CurrentUser -Force
+        Install-Module $($package.name) $($package.parameters) -Scope CurrentUser -Force
         Write-BoxstarterMessage "Installation of $($package.name) complete."
 
         refreshenv

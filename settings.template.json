@@ -64,7 +64,7 @@
   ],
   "powershell_packages" : [
     {
-      "name": "poshgit"
+      "name": "posh-git"
     },
     {
       "name": "z",

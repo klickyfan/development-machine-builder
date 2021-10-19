@@ -51,7 +51,7 @@ C:\ProgramData\chocolatey\logs\chocolatey.log
 
 **Testing**
 
-This script was tested on a VMware VM (Kim-Test) running Windows 10 (64-bit), and on a similarly 
+This script was tested on a VMware VM ("Kim-Test") running Windows 10 (64-bit), and on a similarly 
 provisioned laptop (my third Dell).
 
 **Known Bugs**
@@ -79,7 +79,7 @@ There are some things the Build.ps1 script does not do that you may want to do y
 * sign in to Github Desktop
 * add an [Autohotkey](https://www.autohotkey.com/) script to %appdata%\Microsoft\Windows\Start Menu\Programs\Startup
 * get the [Postman Agent](https://blog.postman.com/introducing-the-postman-agent-send-api-requests-from-your-browser-without-limits/)
-* migrate the user secrets from your old laptop (%appdata%\microsoft\UserSecrets\\microsoft\UserSecrets\
+* migrate the user secrets from your old laptop (%appdata%\microsoft\UserSecrets\\microsoft\UserSecrets)
 
 **Additional Notes and Resources**
 

@@ -44,10 +44,10 @@ function InstallChocolateyPackages {
 
         Write-BoxstarterMessage "Installing $($package.name)..."
         
-        if ($($package.parameters) && $($package.package_parameters)) {
+        if ($($package.parameters) -And $($package.package_parameters)) {
             choco install $($package.name) --params "$($package.parameters)" --package-parameters  "$($package.package_parameters)" --cacheLocation="C:\temp" -y
         }  
-        if ($($package.parameters)) {
+        else if ($($package.parameters)) {
             choco install $($package.name) --params "$($package.parameters)" --cacheLocation="C:\temp" -y
         }
         else if ($($package.package_parameters)) {

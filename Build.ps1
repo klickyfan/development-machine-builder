@@ -42,21 +42,21 @@ function InstallChocolateyPackages {
 
     foreach ($package in $Config.chocolatey_packages) {
 
-        $parameters = ""
-        if ($($package.parameters))
-        {
-            $parameters = " -params `"" + "$($package.parameters)" + "`""
-        }
-
-        $packageParameters = ""
-        if ($($package.package_parameters))
-        {
-            $packageParameters = " --package-parameters `"" + "$($package.package_parameters)"  + "`""
-        }
-
         Write-BoxstarterMessage "Installing $($package.name)..."
-        Write-BoxstarterMessage "Executing choco install $($package.name) $($parameters) $($packageParameters)..."
-        choco install $($package.name) $($parameters) $($packageParameters) --cacheLocation="C:\temp" -y
+        
+        if ($($package.parameters) && $($package.package_parameters)) {
+            choco install $($package.name) --params "$($package.parameters)" --package-parameters  "$($package.package_parameters)" --cacheLocation="C:\temp" -y
+        }  
+        if ($($package.parameters)) {
+            choco install $($package.name) --params "$($package.parameters)" --cacheLocation="C:\temp" -y
+        }
+        else if ($($package.package_parameters)) {
+            choco install $($package.name) --package-parameters "$($package.package_parameters)" --cacheLocation="C:\temp" -y
+        }
+        else {
+            choco install $($package.name) --cacheLocation="C:\temp" -y
+        }
+
         Write-BoxstarterMessage "Installation of $($package.name) complete."
 
         refreshenv

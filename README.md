@@ -25,7 +25,9 @@ the script after the reboot.
     1. Add values for these three variables:
 
        `gitconfig_user_name` : The username you want associated with all your commits.
+       
        `gitconfig_user_email` : The email address you want associated with all your commits.
+       
        `gitconfig_github_user` : Your Github user name.
        
     2. Revise the lists of packages and extensions as desired. 

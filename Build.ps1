@@ -65,12 +65,6 @@ function InstallChocolateyPackages {
         refreshenv
     }
 
-    Write-BoxstarterMessage "Installing postgresql13..."
-    choco install postgresql13 --params "/Password:$($Config.postgres_password)" --cacheLocation="C:\temp" -y
-    Write-BoxstarterMessage "Installation of postgresql13 complete."
-
-    refreshenv
-
     Write-BoxstarterMessage "Packages installed!"
 }
 
@@ -89,8 +83,7 @@ function InstallPowerShellPackages {
 
 function InstallDotNetEF {
 
-    dotnet tool install --global dotnet-ef
-    dotnet tool update --global dotnet-ef
+    dotnet tool install --global dotnet-ef -version $($Config.dotnet-ef_version)
 
     Write-BoxstarterMessage "dotnet ef installed!"
 }
@@ -132,7 +125,7 @@ function ConfigureVSCode {
 
     [System.Environment]::SetEnvironmentVariable("PATH", "C:\Program Files\Microsoft VS Code\bin;" + $Env:Path, "Machine")
 
-    foreach ($extension in $Config.visual_studio_extensions) {
+    foreach ($extension in $Config.visual_studio_code_extensions) {
 
         Write-BoxstarterMessage "Installing $($extension)..."
         code --install-extension $extension

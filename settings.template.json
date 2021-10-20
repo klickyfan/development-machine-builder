@@ -1,9 +1,7 @@
 {
-  "email": "",
   "gitconfig_user_name": "",
   "gitconfig_user_email": "",
   "gitconfig_github_user": "",
-  "postgres_password": "",
   "chocolatey_packages": [
     {
       "name": "choco-cleaner"
@@ -95,5 +93,6 @@
     "Microsoft.ZuneMusic",
     "Microsoft.ZuneVideo",
     "Microsoft.GetHelp"
-  ]
+  ],
+  "dotnet-ef_version": "5.0.11"
 }

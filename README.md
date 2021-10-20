@@ -2,15 +2,12 @@
 
 This repo contains the components needed to set up a new Windows 10 laptop as [recommended by Seal
 Pod](https://levelup.atlassian.net/wiki/spaces/POS/pages/299532297/Chapter+6+Tools) (for Seal Pod
-project development). Most important of these is Build.ps1, a PowerShell script that performs all
-the steps needed. This should not be run directly, however, but rather by running KickOffBuild.ps1, 
-which uses Boxstarter--an open source tool described below--to allow reboots to occur as needed
-while the work is progressing. Hopefully it will prove useful both to new hires and to and those
-whose Dells have failed us.
-
-[Boxstarter](www.boxstarter.org) is an open source tool that detects whether a reboot is required
-during the execution of a PowerShell Script, forces the reboot, and then relogs you in and resumes
-the script after the reboot.
+project development). Most important of these components is Build.ps1, a PowerShell script that 
+performs all the steps needed. This should not be run directly, however, but rather by running 
+KickOffBuild.ps1, which uses [Boxstarter](www.boxstarter.org), an open source tool that detects 
+whether a reboot is required during the execution of a PowerShell Script, forces the reboot, and
+then relogs you in and resumes the script after the reboot. Hopefully it will prove useful both to
+new hires and to and those whose Dells have failed us.
 
 **Usage Instructions**
 
@@ -56,11 +53,11 @@ the script after the reboot.
        }
        ```
        
+       These lines aren't in settings.template.json because of the need for a password.
+
        When you are done the JSON should look something like this:
        
        ![image](https://user-images.githubusercontent.com/43219689/137993008-b786594b-8f06-469e-b88e-a5d660448f16.png)
-       
-       These lines aren't in settings.template.json because of the need for a password.
        
        If, by the way, you don't provide the password parameter, a password will be chosen for you.
        You can change it by following the steps listed [here](https://community.chocolatey.org/packages/postgresql).
@@ -70,11 +67,11 @@ the script after the reboot.
 4. Modify other configuration files as desired, either manually or by copying the ones on your old
    laptop from these locations:
    
-   ConEmu.xml: %appdata%<br>
-   .gitconfig: ~\.gitconfig<br>
-   .Nuget.Config %appdata%\NuGet<br>
-   Microsoft.PowerShell_profile.ps1: ~\Documents\WindowsPowerShell<br>
-   Visual Studio Code settings.json: %appdata\Code\User<br>
+   * ConEmu.xml: %appdata%<br>
+   * .gitconfig: ~\.gitconfig<br>
+   * .Nuget.Config %appdata%\NuGet<br>
+   * Microsoft.PowerShell_profile.ps1: ~\Documents\WindowsPowerShell<br>
+   * Visual Studio Code settings.json: %appdata\Code\User<br>
  
 5. Run the PowersShell ISE (already installed) as an administrator and then do the following:
 

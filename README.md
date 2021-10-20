@@ -41,13 +41,13 @@ the script after the reboot.
        Information about Visual Studio and Visual Studio Code extensions can be found
        [here](https://marketplace.visualstudio.com).
 
-       To list all appx packages (applications you may want the script to remove):
+       To list all appx packages ("crap" applications you may want the script to remove):
        ```
        Get-AppxPackage | Format-Table -Property Name,Version,PackageFullName
        ```
     
-    3. If you want Postgres to be installed, add these lines, with the password you'd like,
-       at the end of the list of Chocolatey packages, 
+    3. If you want to install Postgres, add these lines, with the password you'd like, at the end
+       of the list of Chocolatey packages, 
 
         ```
        {

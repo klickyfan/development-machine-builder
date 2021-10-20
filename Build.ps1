@@ -5,7 +5,6 @@
 function SetTimeZone {
 
     Set-TimeZone -Name "Eastern Standard Time"
-
     Write-BoxstarterMessage "Time zone set!"
 }
 
@@ -60,7 +59,7 @@ function InstallChocolateyPackages {
             choco install $($package.name) --cacheLocation="C:\temp" -y
         }
 
-        Write-BoxstarterMessage "Installation of $($package.name) complete."
+        Write-BoxstarterMessage "Installation of $($package.name) complete!"
 
         refreshenv
     }
@@ -74,11 +73,13 @@ function InstallPowerShellPackages {
 
         Write-BoxstarterMessage "Installing $($package)..."
         Write-BoxstarterMessage "Executing Install-Module -Name $($package) ..."
-        Install-Module -Name $($package) -AllowClobber -Scope CurrentUser -Force
+        Install-Module -Name $package -AllowClobber -Scope CurrentUser -Force
         Write-BoxstarterMessage "Installation of $($package) complete."
 
         refreshenv
     }
+    
+    Write-BoxstarterMessage "Packages installed!"
 }
 
 function InstallDotNetEF {
@@ -97,9 +98,13 @@ function SetEnvironmentVariables {
 
 function ConfigurePowerShell {
 
-    Copy-Item -Path ($BuildComponentsPath  + "\configuration\PowerShell\Microsoft.PowerShell_profile.ps1") -Destination "$Env:UserProfile\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1"
+    $profilePath = "$Env:UserProfile\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1"
 
-    Invoke-Expression "$Env:UserProfile\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1"
+    Copy-Item -Path ($BuildComponentsPath  + "\configuration\PowerShell\Microsoft.PowerShell_profile.ps1") -Destination $profilePath
+
+    Unblock-File -Path $profilePath
+
+    Invoke-Expression $profilePath
 
     Write-BoxstarterMessage "Powershell configured!"
 }
@@ -142,8 +147,12 @@ function ConfigureVSCode {
 function InstallVSExtension {
 
     param($extension)
+    
+    $marketplaceProtocol = "https:"
+    $marketplaceHostName = "marketplace.visualstudio.com"
+    $visualStudioInstallDir = "C:\Program Files (x86)\Microsoft Visual Studio\Installer\resources\app\ServiceHub\Services\Microsoft.VisualStudio.Setup.Service"
 
-    $uri = "$($MarketplaceProtocol)//$($MarketplaceHostName)/items?itemName=$($extension)"
+    $uri = "$($marketplaceProtocol)//$($marketplaceHostName)/items?itemName=$($extension)"
 
     $response = Invoke-WebRequest -Uri $uri -UseBasicParsing -SessionVariable session
 
@@ -151,13 +160,13 @@ function InstallVSExtension {
 
     $anchor = $response.Links | Where-Object { $_.class -eq 'install-button-container' } | Select-Object -ExpandProperty href
 
-    $href = "$($MarketplaceProtocol)//$($MarketplaceHostName)$($anchor)"
+    $href = "$($marketplaceProtocol)//$($marketplaceHostName)$($anchor)"
 
     $vsixLocation = "$($env:Temp)\$([guid]::NewGuid()).vsix"
 
     Invoke-WebRequest $href -OutFile $vsixLocation -WebSession $session
 
-    Start-Process -Filepath "$($VisualStudioInstallDir)\VSIXInstaller" -ArgumentList "/q /a $($vsixLocation)" -Wait
+    Start-Process -Filepath "$($visualStudioInstallDir)\VSIXInstaller" -ArgumentList "/q /a $($vsixLocation)" -Wait
 
     rm $vsixLocation
 }
@@ -169,7 +178,7 @@ function ConfigureVS {
     foreach ($extension in $Config.visual_studio_extensions) {
         Write-BoxstarterMessage "Installing $($extension)..."
         InstallVSExtension $extension
-        Write-BoxstarterMessage "Installation of $($extension) complete."
+        Write-BoxstarterMessage "Installation of $($extension) complete!"
     }
 
     Write-BoxstarterMessage "Visual Studio configured!"
@@ -202,13 +211,18 @@ function RemoveCrap {
 
 function AddThisPCDesktopIcon {
 
-    $item = Get-ItemProperty -Path $IconRegPath -Name $RegValname -ErrorAction SilentlyContinue
+    $iconRegPath = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel"
+    $regValname = "{20D04FE0-3AEA-1069-A2D8-08002B30309D}"
+    
+    $item = Get-ItemProperty -Path $iconRegPath -Name $ergValname -ErrorAction SilentlyContinue
     if ($item) {
-        Set-ItemProperty  -Path $IconRegPath -name $RegValname -Value 0
+        Set-ItemProperty  -Path $iconRegPath -name $regValname -Value 0
     }
     else {
-        New-ItemProperty -Path $IconRegPath -Name $RegValname -Value 0 -PropertyType DWORD | Out-Null
+        New-ItemProperty -Path $iconRegPath -Name $regValname -Value 0 -PropertyType DWORD | Out-Null
     }
+    
+    Write-BoxstarterMessage "Icon added!"
 }
 
 $ErrorActionPreference = "Stop"
@@ -220,12 +234,6 @@ $Boxstarter.NoPassword = $false
 $Boxstarter.AutoLogin = $true
 
 $BuildComponentsPath = [environment]::GetEnvironmentVariable("BUILD_COMPONENTS_PATH", "Machine")
-
-$MarketplaceProtocol = "https:"
-$MarketplaceHostName = "marketplace.visualstudio.com"
-$VisualStudioInstallDir = "C:\Program Files (x86)\Microsoft Visual Studio\Installer\resources\app\ServiceHub\Services\Microsoft.VisualStudio.Setup.Service"
-$IconRegPath = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel"
-$RegValname = "{20D04FE0-3AEA-1069-A2D8-08002B30309D}"
 
 $ErrorActionPreference = "Continue"
 
@@ -272,7 +280,7 @@ Write-BoxstarterMessage "Configuring PowerShell..."
 ConfigurePowershell
 
 Write-BoxstarterMessage "Configuring git..."
-ConfigureGit -Parameters $arguments
+ConfigureGit
 
 Write-BoxstarterMessage "Configuring Visual Studio Code..."
 ConfigureVSCode
@@ -290,5 +298,5 @@ Write-BoxstarterMessage "--------------------------------------"
 Write-BoxstarterMessage "Removing crap..."
 RemoveCrap
 
-Write-BoxstarterMessage "Adding 'This PC' Desktop Icon..."
+Write-BoxstarterMessage "Adding 'This PC' Desktop icon..."
 AddThisPCDesktopIcon

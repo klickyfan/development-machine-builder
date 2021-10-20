@@ -84,7 +84,7 @@ function InstallPowerShellPackages {
 
 function InstallDotNetEF {
 
-    dotnet tool install --global dotnet-ef -version $($Config.dotnet-ef_version)
+    dotnet tool install --global dotnet-ef -version $($Config.dotnet_ef_version)
 
     Write-BoxstarterMessage "dotnet ef installed!"
 }

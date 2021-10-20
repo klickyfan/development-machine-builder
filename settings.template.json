@@ -43,9 +43,6 @@
       "name": "autohotkey"
     },
     {
-      "name": "chocolateygui"
-    },
-    {
       "name": "teamviewer"
     },
     {
@@ -94,5 +91,5 @@
     "Microsoft.ZuneVideo",
     "Microsoft.GetHelp"
   ],
-  "dotnet-ef_version": "5.0.11"
+  "dotnet_ef_version": "5.0.11"
 }

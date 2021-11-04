@@ -64,8 +64,8 @@ new hires and to and those whose Dells have failed us.
    
     4. Use a tool like [JSONLint](https://jsonlint.com) to make sure your settings.json file has no errors.
     
-4. Modify other configuration files as desired, either manually or by copying the ones on your old
-   laptop from these locations:
+4. Modify other configuration files in this repo as desired, either manually or by copying the ones on your
+   old laptop from these locations:
    
    * ConEmu.xml: %appdata%<br>
    * .gitconfig: ~\.gitconfig<br>
@@ -119,17 +119,34 @@ resolved this but I nonetheless ran into it.
 3. I have twice observed Sentinel One complain about suspicious activity on the machine and clobber
 the build. If that occurs, restart it. It can be run multiple times with no harm done.
 
-**Additional Work To Do**
+**Additional Miscellaneous Set Up**
 
 There are some things the Build.ps1 script does not do that you may want to do yourself, including:
 
 * update Microsoft Edge and other software already installed on the machine
-* sign in to various places (your preferred browser(s), OneDrive and/or Google Drive, Visual Studio,
+* set up printing
+* sign in to various places (your preferred browser(s), OneDrive and/or Google Drive, Visual Studio, 
 and Github Desktop)
 * add an [Autohotkey](https://www.autohotkey.com/) script to %appdata%\Microsoft\Windows\Start Menu\Programs\Startup
 * get the [Postman Agent](https://blog.postman.com/introducing-the-postman-agent-send-api-requests-from-your-browser-without-limits/)
 * migrate the user secrets from your old laptop (%appdata%\microsoft\UserSecrets\\microsoft\UserSecrets)
-* set up printing
+
+**Additional Set Up For Development with Azure**
+
+1. Get the [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli-windows?tabs=azure-cli). 
+
+2. Run the Azure Command Prompt.
+
+   1. Enter `az login` and enter your credentials.
+   
+   2. Enter `az account show` and note the values of `id` and `tenant_id`.
+   
+3. Set the environment variable AZURE_CLIENT_ID to the value of `id` and AZURE_TENANT_ID to the
+   value of the variable `tenant_id`.
+   
+4. Restart Visual Studio.
+   
+5. Set up Azure Service Authentication in Visual Studio (Tools->Options->Azure Service Authentication).
 
 **Additional Notes and Resources**
 
